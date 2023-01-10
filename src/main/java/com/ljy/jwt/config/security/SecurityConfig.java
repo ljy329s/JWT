@@ -1,5 +1,6 @@
 package com.ljy.jwt.config.security;
 
+import com.ljy.jwt.auth.PrincipalUserDetailsService;
 import com.ljy.jwt.handler.CustomAccessHandler;
 import com.ljy.jwt.jwt.JwtAuthenticationFilter;
 import com.ljy.jwt.jwt.TokenProvider;
@@ -27,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     
-    private final UserDetailsService userService;
+    private final PrincipalUserDetailsService principalUserDetailsService;
     
     private final TokenProvider tokenProvider;
     

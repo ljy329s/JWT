@@ -6,6 +6,7 @@ import com.ljy.jwt.model.domain.Member;
 import com.ljy.jwt.model.domain.Token;
 import com.ljy.jwt.util.JwtUtil;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenProvider {
 
     @Value("${jwt.secret-key}")
@@ -38,6 +40,8 @@ public class TokenProvider {
     
     @Value("${jwt.prefix}")
     private String jwtTokenPrefix;
+
+    private final PrincipalUserDetailsService principalUserDetailsService;
     
     /**
      * 엑세스토큰 만료시간 : 30분
@@ -88,9 +92,9 @@ public class TokenProvider {
     }
     
     //JWT 토큰에서 인증 정보 조회
-    public Authentication getAuthentication(String token){
+    public Authentication getAuthentication(String token) {
         HashMap<String, String> payloadMap = JwtUtil.getPayloadByToken(token);
-        UserDetails userDetails = PrincipalUserDetailsService.loadUserByUsername(payloadMap.get("sub"));
+        UserDetails userDetails = principalUserDetailsService.loadUserByUsername(payloadMap.get("sub"));
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
     
