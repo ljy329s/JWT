@@ -3,6 +3,7 @@
 <mapper namespace="com.ljy.jwt.model.repository.MemberRepository">
     <select id="selectUser" resultType="member">
         SELECT *
-        FROM MEMBER;
+        FROM MEMBER
+        WHERE username = #{username};
     </select>
 </mapper>

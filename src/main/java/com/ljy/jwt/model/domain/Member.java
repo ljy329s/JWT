@@ -7,51 +7,22 @@ import org.apache.ibatis.type.Alias;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Alias("member")
-public class Member implements UserDetails {
+public class Member {
     
-    private String userName;
-    private String passWord;
-    private String role;
+    private Long id;
+    private String username;
+    private String password;
+    private String roles;
     private String email;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
+    
+    
 }

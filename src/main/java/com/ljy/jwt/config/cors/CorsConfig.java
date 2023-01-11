@@ -13,16 +13,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     
-    @Value("${jwt.responseHeader}")
+    @Value("${jwt.response-header}")
     private String jwtHeader;
     
     /**
      * exposedHeaders 부분으로 API 요청 시 Header에 'Authorization' 이름의 값은 받아온다
      */
     @Bean
-    public void addCorsMappings(CorsRegistry registry){
+    public void addCorsMappings(){
+        CorsRegistry registry = new CorsRegistry();
         registry.addMapping("/api/**")
-            .allowedOrigins("http://localhost:9064")
+            .allowedOriginPatterns("http://localhost:9064")
             .exposedHeaders(jwtHeader)//yml 에서 header 로 설정한 Authorization 헤더 값을 받아온다.
             .allowedMethods(
                 HttpMethod.GET.name(),

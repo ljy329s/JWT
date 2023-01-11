@@ -43,16 +43,28 @@ public class TokenProvider {
 
     private final PrincipalUserDetailsService principalUserDetailsService;
     
-    /**
-     * 엑세스토큰 만료시간 : 30분
-     */
-    private long accessTokenValidTime = Duration.ofMinutes(30).toMillis();//만료시간 30분
+//    /**
+//     * 엑세스토큰 만료시간 : 30분
+//     */
+//    private long accessTokenValidTime = Duration.ofMinutes(30).toMillis();//만료시간 30분
+//
+    
+//    /**
+//     * 리프레시토큰 만료기간 : 2주
+//     */
+//    private long refreshTokenValidTime = Duration.ofDays(14).toMillis();//만료시간 2주
     
     
+    //test를 위함
     /**
-     * 리프레시토큰 만료기간 : 2주
+     * 엑세스토큰 만료시간 : 1분
      */
-    private long refreshTokenValidTime = Duration.ofDays(14).toMillis();//만료시간 2주
+    private long accessTokenValidTime = Duration.ofMinutes(5).toMillis();//만료시간 30분
+    
+    /**
+     //     * 리프레시토큰 만료시간 : 5분
+     //     */
+    private long refreshTokenValidTime = Duration.ofMinutes(5).toMillis();
     
     
     @PostConstruct
@@ -73,8 +85,10 @@ public class TokenProvider {
      * 엑세스 토큰 생성 요청, 리프레시 토큰 생성을 처리하는 메서드
      */
     public Token createToken(Member member, long tokenValidTime){
+        System.out.println("TokenProvider");
+        
         Claims claims = Jwts.claims().setSubject(member.getEmail());
-        claims.put("roles",member.getRole());
+        claims.put("roles",member.getRoles());
         Date now = new Date();
         
         String token = Jwts.builder()
@@ -83,7 +97,7 @@ public class TokenProvider {
             .setExpiration(new Date(now.getTime() + tokenValidTime))//토큰만료시간
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();// 토큰발행
-        
+        System.out.println("token : " + token);
         return Token.builder()
             .key(member.getEmail())
             .value(token)
@@ -95,6 +109,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         HashMap<String, String> payloadMap = JwtUtil.getPayloadByToken(token);
         UserDetails userDetails = principalUserDetailsService.loadUserByUsername(payloadMap.get("sub"));
+        System.out.println("token"+token);
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
     
@@ -105,10 +120,11 @@ public class TokenProvider {
     
     //GET ACCESS TOKEN BY HEADER
     public String resolveAccessToken(HttpServletRequest request) {
+        System.out.println("jwtHeader : "+jwtHeader);
         String bearerToken = request.getHeader(jwtHeader);
-        
+        System.out.println("token_Provider : "+bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(jwtTokenPrefix)){
-            return bearerToken.substring(7);
+            return bearerToken.substring(6);
         }
         return null;
     }
@@ -119,6 +135,7 @@ public class TokenProvider {
      * MalformedJwtException : 잘못된 jwt 구조
      * ExpiredJwtException : JWT 유효기간이 초과
      * SignatureException : JWT 서명실패(변조 데이터)
+     * IllegalArgumentException : 적합하지 않거나 적절하지 못한 인자를 메소드에 넘겨주었을때 발생
      */
     public boolean validateToken(String token, HttpServletRequest request) {
         try {

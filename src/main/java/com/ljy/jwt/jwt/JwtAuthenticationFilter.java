@@ -35,13 +35,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequ
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        
+        System.out.println(response+"response");
+        System.out.println("JwtAuthenticationFilter");
         String path = request.getServletPath();
+        System.out.println("path : "+path);
         try {
-            if (path.startsWith("/api/auth/reissue")) {//토큰을 재발급하는 경우 토큰체크로직 건너뛰기
+            if(path.startsWith("/api/auth/reissue")) {//토큰을 재발급하는 경우 토큰체크로직 건너뛰기 startsWith : 특정 문자열로 시작하는지 알수있는 함수 해당문자열로 시작되는지 확인하고 boolean으로 값 리턴(공백도 인식함 유의)
                 filterChain.doFilter(request, response);
+                System.out.println("1");
             } else {
                 String accessToken = jwtTokenProvider.resolveAccessToken(request);
+                System.out.println("accessToken : "+accessToken);
                 boolean isTokenValid = jwtTokenProvider.validateToken(accessToken, request);
                 
                 if (StringUtils.hasText(accessToken) && isTokenValid) {
@@ -61,8 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequ
             
         }
     }
-    //securityContext에 Authentication 저장
-    private void setAuthentication(String token){
+    
+    /**
+     * 헤더로부터 가져온 정보가 유효하다면 SecurityContext 의 Authentication 에 저장
+     */
+    private void setAuthentication(String token) {
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

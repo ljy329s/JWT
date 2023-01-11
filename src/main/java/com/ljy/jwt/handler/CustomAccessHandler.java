@@ -11,6 +11,6 @@ import java.io.IOException;
 public class CustomAccessHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-    //아직 구현 안함ㄴ
+    //아직 구현 안함
     }
 }

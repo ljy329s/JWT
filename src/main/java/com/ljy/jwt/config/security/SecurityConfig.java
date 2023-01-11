@@ -7,6 +7,7 @@ import com.ljy.jwt.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -40,12 +42,14 @@ public class SecurityConfig {
     }
     
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println("securityConfig");
         return http
             .httpBasic().disable()
             .cors()
@@ -55,11 +59,9 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션사용안함
             .and()
             .exceptionHandling()
-            //.authenticationEntryPoint(new AuthenticationEntryPoint())
             .accessDeniedHandler(new CustomAccessHandler())
             .and()
-            .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-            
-        .build();
+            .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .build();
             }
 }

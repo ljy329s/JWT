@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -14,10 +15,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     
-    @Value("${spring.redis.host}")
+    @Value("${redis.host}")
     private String redisHost;
     
-    @Value("${spring.redis.port}")
+    @Value("${redis.port}")
     private int redisPort;
     
     
@@ -27,9 +28,11 @@ public class RedisConfig {
      */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
-    }
-    
+
+    return new LettuceConnectionFactory(redisHost,redisPort);
+        }
+        
+        
     /**
      * RedisTemplate
      * redis 서버에 redis command를 수행하기 위한 high-level 추상화를 제공
@@ -42,5 +45,18 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         
         return redisTemplate;
+    }
+    
+    /**
+     * 저장된 키와 값 읽기
+     * StringRedisSerializer 을 이용해서 저장된 키와 값을 읽읅 수 있다.
+     */
+    public StringRedisTemplate stringRedisTemplate() {
+        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
+        stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
+        stringRedisTemplate.setValueSerializer(new StringRedisSerializer());
+        
+        stringRedisTemplate.setConnectionFactory(redisConnectionFactory());
+        return stringRedisTemplate;
     }
 }

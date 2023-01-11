@@ -10,23 +10,24 @@ spring:
       name: user
       password: 1234
 
-  jwt:
-    response-header: Authorization
-    secret-key: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
-    prefix: Bearer
+server:
+  port: 9010
+  error:
+    whitelabel:
+      enabled: false
 
-  redis:
-    host: 127.0.0.1
-    port: 6379
+jwt:
+  response-header: Authorization
+  secret-key: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+  prefix: Bearer
+
+redis:
+  host: 127.0.0.1
+  port: 6379
 
 mybatis:
-  type-aliases-package: com.ljy.authority.authority_test.model.domain
+  type-aliases-package: com.ljy.jwt
   mapper-locations: mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
-server:
-  port: 9064
-  error:
-    whitelabel:
-      enabled: false
