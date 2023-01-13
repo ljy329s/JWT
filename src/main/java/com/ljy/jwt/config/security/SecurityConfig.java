@@ -24,13 +24,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * 시큐리티 설정을 담당하는 클래스
  */
-@Configuration//설정파일
-@EnableWebSecurity//시큐리티활성화
+@EnableWebSecurity//시큐리티활성화 어노테이션 내부에 configuration 어노테이션이 있다
 @EnableGlobalAuthentication
 @RequiredArgsConstructor
 public class SecurityConfig {
     
-    private final PrincipalUserDetailsService principalUserDetailsService;
+   // private final PrincipalUserDetailsService principalUserDetailsService;
     
     private final TokenProvider tokenProvider;
     
@@ -55,13 +54,13 @@ public class SecurityConfig {
             .cors()
             .and()
             .csrf().disable()
-            .formLogin().disable()
+//            .formLogin().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션사용안함
             .and()
             .exceptionHandling()
             .accessDeniedHandler(new CustomAccessHandler())
             .and()
-            .addFilterAfter(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
             .build();
             }
 }

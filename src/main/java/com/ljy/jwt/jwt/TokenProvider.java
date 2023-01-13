@@ -67,19 +67,21 @@ public class TokenProvider {
     private long refreshTokenValidTime = Duration.ofMinutes(5).toMillis();
     
     
+    //초기화 secretKey를 base64로 인코딩한다.
     @PostConstruct
     protected void init(){
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
     
+    //엑세스토큰 생성요청
     public Token createAccessToken(Member member){
         return createToken(member, accessTokenValidTime);
     }
     
+    //리프레시토큰 생성요청
     public Token createRefreshToken(Member member){
         return createToken(member, refreshTokenValidTime);
     }
-    
     
     /**
      * 엑세스 토큰 생성 요청, 리프레시 토큰 생성을 처리하는 메서드
@@ -89,15 +91,16 @@ public class TokenProvider {
         
         Claims claims = Jwts.claims().setSubject(member.getEmail());
         claims.put("roles",member.getRoles());
+        System.out.println("claims"+claims);
         Date now = new Date();
-        
         String token = Jwts.builder()
             .setClaims(claims)//정보
             .setIssuedAt(now)//토큰발행시간
             .setExpiration(new Date(now.getTime() + tokenValidTime))//토큰만료시간
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact();// 토큰발행
-        System.out.println("token : " + token);
+        System.out.println("claim: " + claims);
+        System.out.println("token : "+token);
         return Token.builder()
             .key(member.getEmail())
             .value(token)
@@ -121,6 +124,8 @@ public class TokenProvider {
     //GET ACCESS TOKEN BY HEADER
     public String resolveAccessToken(HttpServletRequest request) {
         System.out.println("jwtHeader : "+jwtHeader);
+        System.out.println("request : "+request);
+        
         String bearerToken = request.getHeader(jwtHeader);
         System.out.println("token_Provider : "+bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(jwtTokenPrefix)){

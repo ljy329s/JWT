@@ -1,20 +1,25 @@
 package com.ljy.jwt.model.controller;
 
-import lombok.Getter;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.ljy.jwt.jwt.TokenProvider;
+import com.ljy.jwt.model.domain.Member;
+import com.ljy.jwt.model.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/one")
+@RequiredArgsConstructor
 public class MemberController {
-    @GetMapping("/hello")
-    public String hello(){
-        return "hello";
-    }
-    @PostMapping("/new")
-    public String newToken(){
-        return "new ";
+    
+    private final TokenProvider tokenProvider;
+    
+    @Autowired
+    private MemberRepository memberRepository;
+    @PostMapping("/login")
+    public String login(){
+    Member member1 = memberRepository.selectMember("bob1234");
+        tokenProvider.createAccessToken(member1);
+        return "로그인 메소드";
     }
 }

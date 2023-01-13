@@ -9,12 +9,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
-//@RequiredArgsConstructor
 @Service
 @RequiredArgsConstructor
 public class PrincipalUserDetailsService implements UserDetailsService {
-   
-   MemberRepository memberRepository;
+    MemberRepository memberRepository;
     
     
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

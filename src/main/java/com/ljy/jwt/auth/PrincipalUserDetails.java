@@ -21,7 +21,7 @@ public class PrincipalUserDetails implements UserDetails , Serializable {
     }
     
     /**
-     * 유저가 가깆고 있는 권한을 리턴해준다.
+     * 유저가 가지고 있는 권한을 리턴해준다.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

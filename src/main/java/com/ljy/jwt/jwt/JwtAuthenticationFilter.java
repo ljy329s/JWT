@@ -23,9 +23,11 @@ import java.io.IOException;
  * Filter 에서 발생하는 Exception 은 Custon 할 수가 없다.
  * HttpServletResponse 에 Access token 만료를 알리는 Custom 400에러를 담아 보내줌
  */
+//해당 클래스는 JwtTokenProvider 가 검증을 끝낸 Jwt 로부터 유저 정보를 조회해와서 UserPasswordAuthenticationFilter 로 전달합니다.
 
+//OncePerRequestFilter : 모든서블릿에 일관된 요청을 하기 위해 만들어진필터
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequestFilter : 모든서블릿에 일관된 요청을 하기 위해 만들어진필터
+public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequestFilter {
     
     private final TokenProvider jwtTokenProvider;
     
@@ -33,19 +35,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequ
         jwtTokenProvider = provider;
     }
     
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(response+"response");
+        System.out.println("response : " + response);
+        System.out.println("request : " + request);
         System.out.println("JwtAuthenticationFilter");
         String path = request.getServletPath();
-        System.out.println("path : "+path);
-        try {
-            if(path.startsWith("/api/auth/reissue")) {//토큰을 재발급하는 경우 토큰체크로직 건너뛰기 startsWith : 특정 문자열로 시작하는지 알수있는 함수 해당문자열로 시작되는지 확인하고 boolean으로 값 리턴(공백도 인식함 유의)
+        System.out.println("path : " + path);
+        try {///토큰을 재발급하는 경우 토큰체크로직 건너뛰기 startsWith : 특정 문자열로 시작하는지 알수있는 함수 해당문자열로 시작되는지 확인하고 boolean으로 값 리턴(공백도 인식함 유의)
+            if (path.startsWith("/loginwwww")) {
                 filterChain.doFilter(request, response);
                 System.out.println("1");
             } else {
+                System.out.println("2");
+                //헤더에서 jwt 를 받아준다.
                 String accessToken = jwtTokenProvider.resolveAccessToken(request);
-                System.out.println("accessToken : "+accessToken);
+                System.out.println("accessToken : " + accessToken);
+                //토큰이 유요한지 확인
                 boolean isTokenValid = jwtTokenProvider.validateToken(accessToken, request);
                 
                 if (StringUtils.hasText(accessToken) && isTokenValid) {
@@ -66,6 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequ
         }
     }
     
+    
     /**
      * 헤더로부터 가져온 정보가 유효하다면 SecurityContext 의 Authentication 에 저장
      */
@@ -73,4 +81,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {//OncePerRequ
         Authentication authentication = jwtTokenProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+    
 }
