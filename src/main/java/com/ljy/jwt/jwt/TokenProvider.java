@@ -72,41 +72,71 @@ public class TokenProvider {
     protected void init(){
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
-    
+
     //엑세스토큰 생성요청
+//    public Token createAccessToken(Member member){
+//        return createToken(member, accessTokenValidTime);
+//    }
+
     public Token createAccessToken(Member member){
-        return createToken(member, accessTokenValidTime);
+        return createToken(member);
     }
-    
-    //리프레시토큰 생성요청
-    public Token createRefreshToken(Member member){
-        return createToken(member, refreshTokenValidTime);
-    }
+//
+//    //리프레시토큰 생성요청
+//    public Token createRefreshToken(Member member){
+//        return createToken(member, refreshTokenValidTime);
+//    }
     
     /**
      * 엑세스 토큰 생성 요청, 리프레시 토큰 생성을 처리하는 메서드
      */
-    public Token createToken(Member member, long tokenValidTime){
+//    public Token createToken(Member member, long tokenValidTime){
+//        System.out.println("TokenProvider");
+//
+//        Claims claims = Jwts.claims().setSubject(member.getEmail());
+//        claims.put("roles",member.getRoles());
+//        System.out.println("claims"+claims);
+//        Date now = new Date();
+//        String token = Jwts.builder()
+//            .setIssuer("ljy")//토큰발급자
+//            .setClaims(claims)//정보
+//            .setIssuedAt(now)//토큰발행시간
+//            .setExpiration(new Date(now.getTime() + tokenValidTime))//토큰만료시간
+//            .signWith(SignatureAlgorithm.HS256, secretKey)
+//            .compact();// 토큰발행
+//        System.out.println("claim: " + claims);
+//        System.out.println("token : "+token);
+//        return Token.builder()
+//            .key(member.getEmail())
+//            .value(token)
+//            .expiredTime(tokenValidTime)
+//            .build();
+//    }
+
+    public Token createToken(Member member){
         System.out.println("TokenProvider");
-        
+        long tokenValidTime = accessTokenValidTime;
         Claims claims = Jwts.claims().setSubject(member.getEmail());
         claims.put("roles",member.getRoles());
         System.out.println("claims"+claims);
         Date now = new Date();
         String token = Jwts.builder()
-            .setClaims(claims)//정보
-            .setIssuedAt(now)//토큰발행시간
-            .setExpiration(new Date(now.getTime() + tokenValidTime))//토큰만료시간
-            .signWith(SignatureAlgorithm.HS256, secretKey)
-            .compact();// 토큰발행
+                .setIssuer("ljy")//토큰발급자
+                .setClaims(claims)//정보
+                .setIssuedAt(now)//토큰발행시간
+                .setExpiration(new Date(now.getTime() + tokenValidTime))//토큰만료시간
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();// 토큰발행
         System.out.println("claim: " + claims);
         System.out.println("token : "+token);
         return Token.builder()
-            .key(member.getEmail())
-            .value(token)
-            .expiredTime(tokenValidTime)
-            .build();
+                .key(member.getEmail())
+                .value(token)
+                .expiredTime(tokenValidTime)
+                .build();
     }
+
+
     
     //JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {

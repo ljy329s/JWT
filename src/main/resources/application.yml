@@ -1,9 +1,42 @@
+#spring:
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://14.63.226.76:9606/ljy_db
+#    username: ljy_user
+#    password: "!ljyUser329"
+#
+#  security:
+#    user:
+#      name: user
+#      password: 1234
+#
+#server:
+#  port: 9064
+#  error:
+#    whitelabel:
+#      enabled: false
+#
+#jwt:
+#  response-header: Authorization
+#  secret-key: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+#  prefix: Bearer
+#
+#redis:
+#  host: 127.0.0.1
+#  port: 6379
+#
+#mybatis:
+#  type-aliases-package: com.ljy.jwt
+#  mapper-locations: mapper/*.xml
+#  configuration:
+#    map-underscore-to-camel-case: true
+
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://14.63.226.76:9606/ljy_db
-    username: ljy_user
-    password: "!ljyUser329"
+    url: jdbc:mariadb://localhost:3306/ljy329s
+    username: root
+    password: '1234'
 
   security:
     user:
@@ -28,6 +61,5 @@ redis:
 mybatis:
   type-aliases-package: com.ljy.jwt
   mapper-locations: mapper/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
-
+#  configuration:
+#    map-underscore-to-camel-case: true

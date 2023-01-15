@@ -8,8 +8,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * cors 설정을 담당하는 클래스
+ * cors 설정을 담당하는 클래스 전역설정
  */
+
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
     
@@ -22,10 +23,10 @@ public class CorsConfig implements WebMvcConfigurer {
     @Bean
     public void addCorsMappings(){
         CorsRegistry registry = new CorsRegistry();
-        registry.addMapping("/api/**")
-            .allowedOriginPatterns("http://localhost:9064")
-            .exposedHeaders(jwtHeader)//yml 에서 header 로 설정한 Authorization 헤더 값을 받아온다.
-            .allowedMethods(
+        registry.addMapping("/testApi/**")
+            .allowedOriginPatterns("http://localhost:9064")//자원공유 허락할곳 여러개 지정가능
+            .exposedHeaders(jwtHeader)//어떤 헤더를 허용할것인가. yml 에서 header 로 설정한 Authorization 헤더 값을 받아온다.
+            .allowedMethods(//어떤 http 메서드를 허용할것인지
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
                 HttpMethod.PATCH.name(),

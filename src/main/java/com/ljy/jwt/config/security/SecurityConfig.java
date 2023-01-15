@@ -1,13 +1,9 @@
 package com.ljy.jwt.config.security;
 
-import com.ljy.jwt.auth.PrincipalUserDetailsService;
-import com.ljy.jwt.handler.CustomAccessHandler;
 import com.ljy.jwt.jwt.JwtAuthenticationFilter;
 import com.ljy.jwt.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
@@ -16,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -54,11 +49,10 @@ public class SecurityConfig {
             .cors()
             .and()
             .csrf().disable()
-//            .formLogin().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션사용안함
             .and()
-            .exceptionHandling()
-            .accessDeniedHandler(new CustomAccessHandler())
+            .exceptionHandling()//에러처리
+            //.accessDeniedHandler(new CustomAccessHandler())//접근권한 없는 페이지 접속에 관한 처리
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
             .build();

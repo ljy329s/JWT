@@ -1,17 +1,25 @@
 package com.ljy.jwt.auth;
 
+import com.ljy.jwt.common.ErrorCode;
+import com.ljy.jwt.handler.CustomException;
 import com.ljy.jwt.model.domain.Member;
 import com.ljy.jwt.model.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class PrincipalUserDetailsService implements UserDetailsService {
+
+   @Autowired(required = false)
     MemberRepository memberRepository;
     
     
@@ -24,15 +32,15 @@ public class PrincipalUserDetailsService implements UserDetailsService {
             System.out.println("존재하지 않는 아이디입니다.");
         }
         return new PrincipalUserDetails(member);
-        
+
     }
     
-    //    @Override
+//        @Override
 //    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        Optional<Member> member = MemberRepository.selectUser(email);
+//        Optional<Member> member = Optional.ofNullable(memberRepository.selectMember(email));
 //        member.orElseThrow(
 //                () -> new CustomException(ErrorCode.NOT_FOUND_MEMBER)
 //        );
-//        return member.get();
+//        return (UserDetails) member.get();
 //    }
 }

@@ -1,6 +1,7 @@
 package com.ljy.jwt.auth;
 
 import com.ljy.jwt.model.domain.Member;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
 
 public class PrincipalUserDetails implements UserDetails , Serializable {
     
